@@ -12,20 +12,22 @@ public class MoveMode_Player_MouseDirection : MonoBehaviour, IMoveMode
     /// </summary>
     float directionAngle;
 
-    Camera mCam;			//主相机
-    Animator moveAnimator;  //角色animator
-    int horizontalHash;     //左右参数
-    int verticalHash;       //上下参数
-    int animationHash;      //动画状态名称
-    float moveHorizontal;   //左右按键
-    float moveVertical;     //上下按键
-    Vector3 moveDirection;  //角色移动方向
+    Transform fatherCharactor; //父物体(含有animator)
+    Camera mCam;			    //主相机
+    Animator moveAnimator;      //角色animator
+    int horizontalHash;         //左右参数
+    int verticalHash;           //上下参数
+    int animationHash;          //动画状态名称
+    float moveHorizontal;       //左右按键
+    float moveVertical;         //上下按键
+    Vector3 moveDirection;      //角色移动方向
 
     // Use this for initialization
     void Start()
     {
+        fatherCharactor = transform.parent;
         mCam = Camera.main;
-        moveAnimator = GetComponent<Animator>();
+        moveAnimator = fatherCharactor.GetComponent<Animator>();
         horizontalHash = Animator.StringToHash("AxisX");
         verticalHash = Animator.StringToHash("AxisY");
         animationHash = Animator.StringToHash("PlayYuyuko_Move");
@@ -63,7 +65,7 @@ public class MoveMode_Player_MouseDirection : MonoBehaviour, IMoveMode
 
         //角色移动
         moveDirection = new Vector3(moveHorizontal, moveVertical).normalized;
-        transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
+        fatherCharactor.transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
     }
 
     float IMoveMode.directionAngle

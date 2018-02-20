@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player_YuyukoBullent01 : Bullent
+public class Player_YuyukoBullent01 : MonoBehaviour
 {
     public float velocity;              //弹幕速度
     public float acceleration;          //弹幕加速度
