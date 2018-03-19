@@ -30,7 +30,7 @@ public class AttackMode_Yuyuko_01 : MonoBehaviour, IAttackMode
 
     public void Attack()
     {
-        if (Input.GetButton("Fire1") && (Time.frameCount > chargeFinishFrame))    //按下攻击键且没有处于后摇中
+        if (Input.GetButton("Fire1") && (MySceneManager.Instance.frameSinceLevelLoad > chargeFinishFrame))    //按下攻击键且没有处于后摇中
         {
             chargeFrontCount += 1;
             if (chargeFrontCount > chargeFront)
@@ -39,7 +39,7 @@ public class AttackMode_Yuyuko_01 : MonoBehaviour, IAttackMode
                 {
                     Invoke("Launch", i * waveInterval / 60f);
                 }
-                chargeFinishFrame = Time.frameCount + chargeBack + (bullentWave - 1) * waveInterval;      //下次可攻击的时间点
+                chargeFinishFrame = MySceneManager.Instance.frameSinceLevelLoad + chargeBack + (bullentWave - 1) * waveInterval;      //下次可攻击的时间点
                 chargeFrontCount = 0;                   //前摇计数清零
             }
         }
@@ -54,7 +54,8 @@ public class AttackMode_Yuyuko_01 : MonoBehaviour, IAttackMode
         Vector3 LaunchPosition = transform.position + new Vector3(relativeLaunchPosition.x * Mathf.Cos(directionAngle) - relativeLaunchPosition.y * Mathf.Sin(directionAngle), relativeLaunchPosition.x * Mathf.Sin(directionAngle) + relativeLaunchPosition.y * Mathf.Cos(directionAngle), 0); //计算旋转后的偏移位置
         for (int i = 0; i < bullentNumber; i++)
         {
-            Instantiate(bullentType, LaunchPosition, Quaternion.Euler(0, 0, playerMove.directionAngle*Mathf.Rad2Deg - bullentRange / 2 + i * bullentRange / (bullentNumber - 1)));
+            GameObject bullentIns = (GameObject)Instantiate(bullentType, LaunchPosition, Quaternion.Euler(0, 0, playerMove.directionAngle * Mathf.Rad2Deg - bullentRange / 2 + i * bullentRange / (bullentNumber - 1)));
+            bullentIns.transform.parent = MySceneManager.Instance.playerBullentsObj.transform;
         }
     }
 }

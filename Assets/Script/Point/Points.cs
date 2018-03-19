@@ -9,7 +9,7 @@ public class Points : MonoBehaviour
         public bool keepGizoms = true;
         public bool useScreenSize;
         public Color selectedColor = Color.magenta;
-        [Range(0.1f, 1f)]
+        [Range(0.05f, 1f)]
         public float pointSize = 0.3f;
         public Color pointColor = new Color(0.5f,0,1,1);
         [Range(10, 30)]

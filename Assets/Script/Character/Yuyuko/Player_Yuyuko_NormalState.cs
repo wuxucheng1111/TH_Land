@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player_Yuyuko_NormalState : MonoBehaviour, IPlayerState
+public class Player_Yuyuko_NormalState : PlayerState
 {
     IMoveMode playerMoveMode;
     IAttackMode playerAttackMode;
+    public float playerSize;
 
     // Use this for initialization
     void Start()
@@ -19,14 +20,19 @@ public class Player_Yuyuko_NormalState : MonoBehaviour, IPlayerState
 
     }
 
-    public void Move()
+    public override void Move()
     {
         playerMoveMode.Move();
     }
 
 
-    public void Attack()
+    public override void Attack()
     {
         playerAttackMode.Attack();
+    }
+
+    public override  float GetPlayerSize()
+    {
+        return playerSize;
     }
 }

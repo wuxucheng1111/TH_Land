@@ -8,24 +8,22 @@ public class MoveMode_Bat_Random01 : MonoBehaviour, IMoveMode
     public int moveStopTime;           //移动后停止的帧数
     public float moveSpeed;            //移动速度
 
-    int stepTimeCount;          //起算点
+    int startTimeCount;         //起算点
     Vector3 moveDirection;      //移动方向
 
     Animator moveAnimator;      //角色animator
     int horizontalHash;         //左右参数
     int verticalHash;           //上下参数
-    int animationHash;          //动画状态名称
 
     // Use this for initialization
     void Start()
     {
-        stepTimeCount = Time.frameCount;
+        startTimeCount = MySceneManager.Instance.frameSinceLevelLoad;
         moveDirection = Random.insideUnitCircle.normalized;
 
         moveAnimator = transform.parent.GetComponent<Animator>();
         horizontalHash = Animator.StringToHash("AxisX");
         verticalHash = Animator.StringToHash("AxisY");
-        animationHash = Animator.StringToHash("Enemy_Bat02_Move");
     }
 
     // Update is called once per frame
@@ -36,17 +34,13 @@ public class MoveMode_Bat_Random01 : MonoBehaviour, IMoveMode
 
     public void Move()
     {
-        if ((Time.frameCount - stepTimeCount) < moveStartTime)
+        if ((MySceneManager.Instance.frameSinceLevelLoad - startTimeCount) > moveStartTime)
         {
-            moveAnimator.Play(animationHash, 0, 0);
-        }
-        else
-        {
-            if ((Time.frameCount - stepTimeCount - moveStartTime) % (moveTime + moveStopTime) == 0)
+            if ((MySceneManager.Instance.frameSinceLevelLoad - startTimeCount - moveStartTime) % (moveTime + moveStopTime) == 0)
             {
                 moveDirection = Random.insideUnitCircle.normalized;
             }
-            if ((Time.frameCount - stepTimeCount - moveStartTime) % (moveTime + moveStopTime) < moveTime)
+            if ((MySceneManager.Instance.frameSinceLevelLoad - startTimeCount - moveStartTime) % (moveTime + moveStopTime) < moveTime)
             {
                 moveAnimator.SetFloat(horizontalHash, moveDirection.x);
                 moveAnimator.SetFloat(verticalHash, moveDirection.y);

@@ -18,12 +18,12 @@ public class AttackMode_Bat_AimToPlayer01 : MonoBehaviour, IAttackMode
     // Use this for initialization
     void Start()
     {
-        player = SceneManager.Instance.player;
+        player = MySceneManager.Instance.player;
         if (bullentType == null)
         {
             Debug.LogWarning("The bullent is null");
         }
-        chargeFinishFrame = attackStartTime;
+        chargeFinishFrame = MySceneManager.Instance.frameSinceLevelLoad + attackStartTime;
 
     }
 
@@ -35,13 +35,13 @@ public class AttackMode_Bat_AimToPlayer01 : MonoBehaviour, IAttackMode
 
     public void Attack()
     {
-        if (Time.frameCount > chargeFinishFrame)
+        if (MySceneManager.Instance.frameSinceLevelLoad > chargeFinishFrame)
         {
             for (int i = 0; i < bullentWave; i++)   //进行数波发射
             {
                 Invoke("Launch", i * waveInterval / 60f);
             }
-            chargeFinishFrame = Time.frameCount + (bullentWave - 1) * waveInterval + chargeBack;
+            chargeFinishFrame = MySceneManager.Instance.frameSinceLevelLoad + (bullentWave - 1) * waveInterval + chargeBack;
         }
     }
 
@@ -51,7 +51,8 @@ public class AttackMode_Bat_AimToPlayer01 : MonoBehaviour, IAttackMode
         Vector3 launchPosition = transform.position + new Vector3(relativeLaunchPosition.x * Mathf.Cos(directionAngle) - relativeLaunchPosition.y * Mathf.Sin(directionAngle), relativeLaunchPosition.x * Mathf.Sin(directionAngle) + relativeLaunchPosition.y * Mathf.Cos(directionAngle), 0); //计算旋转后的偏移位置
         for (int i = 0; i < bullentNumber; i++)
         {
-            Instantiate(bullentType, launchPosition, Quaternion.Euler(0, 0, directionAngle*Mathf.Rad2Deg - bullentRange / 2 + i * bullentRange / (bullentNumber - 1)));
+            GameObject bullentIns = (GameObject)Instantiate(bullentType, launchPosition, Quaternion.Euler(0, 0, directionAngle * Mathf.Rad2Deg - bullentRange / 2 + i * bullentRange / (bullentNumber - 1)));
+            bullentIns.transform.parent = MySceneManager.Instance.enemyBullentsObj.transform;
         }
     }
 }

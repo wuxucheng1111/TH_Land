@@ -17,10 +17,11 @@ public class MoveMode_Player_MouseDirection : MonoBehaviour, IMoveMode
     Animator moveAnimator;      //角色animator
     int horizontalHash;         //左右参数
     int verticalHash;           //上下参数
-    int animationHash;          //动画状态名称
     float moveHorizontal;       //左右按键
     float moveVertical;         //上下按键
     Vector3 moveDirection;      //角色移动方向
+    private float moveBorderX;
+    private float moveBorderY;
 
     // Use this for initialization
     void Start()
@@ -30,7 +31,8 @@ public class MoveMode_Player_MouseDirection : MonoBehaviour, IMoveMode
         moveAnimator = fatherCharactor.GetComponent<Animator>();
         horizontalHash = Animator.StringToHash("AxisX");
         verticalHash = Animator.StringToHash("AxisY");
-        animationHash = Animator.StringToHash("PlayYuyuko_Move");
+        moveBorderX = MySceneManager.Instance.GetAreaBorderX() - 0.36f;
+        moveBorderY = MySceneManager.Instance.GetAreaBorderY() - 0.36f;
     }
 
     // Update is called once per frame
@@ -55,7 +57,6 @@ public class MoveMode_Player_MouseDirection : MonoBehaviour, IMoveMode
         //动画播放
         if (moveHorizontal == 0 && moveVertical == 0)
         {
-            moveAnimator.Play(animationHash, 0, 0);
             moveAnimator.speed = 0;
         }
         else
@@ -64,6 +65,14 @@ public class MoveMode_Player_MouseDirection : MonoBehaviour, IMoveMode
         }
 
         //角色移动
+        if ((fatherCharactor.transform.position.x > moveBorderX && moveHorizontal == 1) || (fatherCharactor.transform.position.x < -moveBorderX && moveHorizontal == -1))
+        {
+            moveHorizontal = 0;
+        }
+        if ((fatherCharactor.transform.position.y > moveBorderY && moveVertical == 1) || (fatherCharactor.transform.position.y < -moveBorderY && moveVertical == -1))
+        {
+            moveVertical = 0;
+        }
         moveDirection = new Vector3(moveHorizontal, moveVertical).normalized;
         fatherCharactor.transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
     }

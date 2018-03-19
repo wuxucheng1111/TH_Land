@@ -1,15 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class PlayerControl : MonoBehaviour
 {
-    public List<IPlayerState> stateList;
-    IPlayerState playerState;
+    public PlayerState playerState;
+    public float playerSize { get { return playerState.GetPlayerSize(); } }     //角色判定半径
+    public int maxPlayHP;
+    public int playerHP;
+    public Image barHP;
+
     // Use this for initialization
     void Start()
     {
-        playerState = GetComponent<Player_Yuyuko_NormalState>();
+        playerHP = maxPlayHP;
     }
 
     // Update is called once per frame
@@ -17,5 +22,6 @@ public class PlayerControl : MonoBehaviour
     {
         playerState.Move();
         playerState.Attack();
+        barHP.fillAmount = (float)playerHP / (float)maxPlayHP;
     }
 }
