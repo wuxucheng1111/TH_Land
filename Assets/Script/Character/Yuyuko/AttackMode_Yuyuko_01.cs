@@ -13,7 +13,7 @@ public class AttackMode_Yuyuko_01 : MonoBehaviour, IAttackMode
     public int chargeBack;                  //攻击后摇
 
     int chargeFrontCount;                   //前摇计数
-    int chargeFinishFrame;                    //蓄力完成帧（下次可攻击的时间点）
+    int chargeFinishFrame;                  //蓄力完成帧（下次可攻击的时间点）
     IMoveMode playerMove;
 
     // Use this for initialization
@@ -30,6 +30,8 @@ public class AttackMode_Yuyuko_01 : MonoBehaviour, IAttackMode
 
     public void Attack()
     {
+        if (transform.parent.GetComponent<PlayerControl>().isDead)
+            return;
         if (Input.GetButton("Fire1") && (MySceneManager.Instance.frameSinceLevelLoad > chargeFinishFrame))    //按下攻击键且没有处于后摇中
         {
             chargeFrontCount += 1;

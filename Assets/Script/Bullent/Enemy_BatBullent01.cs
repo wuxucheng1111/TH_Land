@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Enemy_BatBullent01 : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class Enemy_BatBullent01 : MonoBehaviour
 
     Vector3 direction;                  //实际移动速度
     int startTime;                      //弹幕产生的时间点
-    GameObject player;                  //玩家
+    List<GameObject> player;            //玩家列表
 
     // Use this for initialization
     void Start()
@@ -35,12 +36,15 @@ public class Enemy_BatBullent01 : MonoBehaviour
     }
 
     void CollisionDet()
-    {        
-        if ((transform.position - player.transform.position).magnitude < (player.GetComponent<PlayerControl>().playerSize + bullentSize))
+    {
+        for (int i = 0; i < player.Count; i++)
         {
-            player.GetComponent<PlayerControl>().playerHP--;
-            UIManager.Instance.hitCountText.text = "中弹数：" + (++UIManager.Instance.hitCount);
-            Destroy(gameObject);
+            if ((transform.position - player[i].transform.position).magnitude < (player[i].GetComponent<PlayerControl>().playerSize + bullentSize))
+            {
+                player[i].GetComponent<PlayerControl>().playerHP--;
+                UIManager.Instance.hitCountText.text = "中弹数：" + (++UIManager.Instance.hitCount);
+                Destroy(gameObject);
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ public class EnemyControl : MonoBehaviour
     public int enemyHP;
     public EnemyState enemyState;
     public float enemySize { get { return enemyState.GetEnemySize(); } }       //敌人判定半径
+    public bool isDead;
 
     Animator enemyAnimator;
     AnimatorStateInfo stateInfo;
@@ -22,6 +23,7 @@ public class EnemyControl : MonoBehaviour
         if (enemyHP <1)
         {
             enemyAnimator.SetBool("isDead", true);
+            isDead = true;
         }
         else
         {

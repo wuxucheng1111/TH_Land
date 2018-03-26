@@ -5,8 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class MySceneManager : SingletonTemplate<MySceneManager>
 {
-    public GameObject player;
-    private PlayerControl playerControl;
+    public List<GameObject> player;
     public List<GameObject> enemies;
     public Points points;
     public List<int> spawnTime;
@@ -27,18 +26,24 @@ public class MySceneManager : SingletonTemplate<MySceneManager>
     {
         Time.timeScale = 1;
         //player = (GameObject)Instantiate(Resources.Load("Prefabs/Player_Yuyuko"));
-        player = Instantiate(player);
-        player.transform.parent = playerObj.transform;
+        for (int i = 0; i < player.Count; i++)
+        {
+            player[i] = Instantiate(player[i]);
+            player[i].transform.parent = playerObj.transform;
+        }
     }
     void Start()
     {
-        playerControl = player.GetComponent<PlayerControl>();
+
         frameZero = Time.frameCount;
     }
     void Update()
     {
-        EnemySpawn();
-        IsGameOver();
+        if (player.Count==0)
+        {
+            Invoke("GameOver", 1f);
+        }
+        EnemySpawn();        
     }
 
     void EnemySpawn()
@@ -64,19 +69,9 @@ public class MySceneManager : SingletonTemplate<MySceneManager>
     {
         return areaBorderY;
     }
-    void IsGameOver()
-    {
-        if (playerControl.playerHP < 1)
-        {
-            Animator playerAni = player.GetComponent<Animator>();
-            playerAni.SetBool("isDead", true);
-            AnimatorStateInfo playerAniInfo=playerAni.GetCurrentAnimatorStateInfo(0);
-            if (playerAniInfo.IsName("Player_Die") && playerAniInfo.normalizedTime > 1.0f)
-            {
-                player.SetActive(false);
-                UIManager.Instance.UIGameOver();
-            }
-        }
+    void GameOver()
+    {        
+        UIManager.Instance.UIGameOver();
     }
     public void Restart()
     {

@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class AttackMode_Bat_AimToPlayer01 : MonoBehaviour, IAttackMode
 {
     public GameObject bullentType;          //弹幕预制体
-    public GameObject player;               //目标玩家
+    public List<GameObject> player;         //玩家列表
+    public GameObject aimedPlayer;          //目标玩家
     public Vector3 relativeLaunchPosition;  //发射相对位置
     public int bullentNumber;               //一波发射数量
     public float bullentRange;              //子弹覆盖范围
@@ -13,18 +15,21 @@ public class AttackMode_Bat_AimToPlayer01 : MonoBehaviour, IAttackMode
     public int attackStartTime;             //攻击开始时间
     public int chargeBack;                  //攻击后摇
 
-    int chargeFinishFrame;                    //蓄力完成帧（下次可攻击的时间点）
+    int chargeFinishFrame;                  //蓄力完成帧（下次可攻击的时间点）
 
     // Use this for initialization
     void Start()
     {
         player = MySceneManager.Instance.player;
+        if (player.Count != 0)
+        {
+            aimedPlayer = player[0];
+        }
         if (bullentType == null)
         {
             Debug.LogWarning("The bullent is null");
         }
         chargeFinishFrame = MySceneManager.Instance.frameSinceLevelLoad + attackStartTime;
-
     }
 
     // Update is called once per frame
@@ -47,7 +52,9 @@ public class AttackMode_Bat_AimToPlayer01 : MonoBehaviour, IAttackMode
 
     void Launch()
     {
-        float directionAngle = Mathf.Atan2(player.transform.position.y - transform.position.y, player.transform.position.x - transform.position.x) - Mathf.PI / 2;  //与玩家的连线与Y轴的夹角
+        if (aimedPlayer == null)
+            return;
+        float directionAngle = Mathf.Atan2(aimedPlayer.transform.position.y - transform.position.y, aimedPlayer.transform.position.x - transform.position.x) - Mathf.PI / 2;  //与玩家的连线与Y轴的夹角
         Vector3 launchPosition = transform.position + new Vector3(relativeLaunchPosition.x * Mathf.Cos(directionAngle) - relativeLaunchPosition.y * Mathf.Sin(directionAngle), relativeLaunchPosition.x * Mathf.Sin(directionAngle) + relativeLaunchPosition.y * Mathf.Cos(directionAngle), 0); //计算旋转后的偏移位置
         for (int i = 0; i < bullentNumber; i++)
         {

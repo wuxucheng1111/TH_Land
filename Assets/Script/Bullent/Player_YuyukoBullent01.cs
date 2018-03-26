@@ -41,7 +41,7 @@ public class Player_YuyukoBullent01 : MonoBehaviour
             return;
         for (int index = 0; index < enemies.Count; index++)
         {
-            if ((transform.position - enemies[index].transform.position).magnitude < (bullentSize + enemies[index].GetComponent<EnemyControl>().enemySize))
+            if ((transform.position - enemies[index].transform.position).magnitude < (bullentSize + enemies[index].GetComponent<EnemyControl>().enemySize) && enemies[index].GetComponent<EnemyControl>().isDead != true)
             {
                 UIManager.Instance.scoreText.text = "得分：" + (++UIManager.Instance.score);
                 enemies[index].GetComponent<EnemyControl>().enemyHP--;

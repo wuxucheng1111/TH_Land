@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CameraFollow : MonoBehaviour
 {
     public float speed;
 
-    private GameObject player;
+    private List<GameObject> player;
+    private GameObject aimedPlayer;
     private float screenBorderX;
     private float screenBorderY;
 
@@ -13,6 +15,10 @@ public class CameraFollow : MonoBehaviour
     void Start()
     {
         player = MySceneManager.Instance.player;
+        if (player.Count != 0)
+        {
+            aimedPlayer = player[0];
+        }
         screenBorderX = MySceneManager.Instance.areaBorderX;
         screenBorderY = MySceneManager.Instance.areaBorderY;
     }
@@ -20,10 +26,12 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (aimedPlayer == null)
+            return;
         float interpolation = speed * Time.deltaTime;
         Vector3 position = transform.position;
-        position.x = Mathf.Lerp(transform.position.x, player.transform.position.x, interpolation);
-        position.y = Mathf.Lerp(transform.position.y, player.transform.position.y, interpolation);
+        position.x = Mathf.Lerp(transform.position.x, aimedPlayer.transform.position.x, interpolation);
+        position.y = Mathf.Lerp(transform.position.y, aimedPlayer.transform.position.y, interpolation);
         float orthographicSize = GetComponent<Camera>().orthographicSize;//orthographicSize代表相机(或者称为游戏视窗)竖直方向一半的范围大小,且不随屏幕分辨率变化(水平方向会变)
         var cameraHalfWidth = orthographicSize * ((float)Screen.width / Screen.height);//的到视窗水平方向一半的大小
         position.x = Mathf.Clamp(position.x, -screenBorderX + cameraHalfWidth, screenBorderX - cameraHalfWidth);//限定x值
