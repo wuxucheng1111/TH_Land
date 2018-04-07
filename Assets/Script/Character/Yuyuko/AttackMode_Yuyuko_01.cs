@@ -16,6 +16,9 @@ public class AttackMode_Yuyuko_01 : MonoBehaviour, IAttackMode
     int chargeFinishFrame;                  //蓄力完成帧（下次可攻击的时间点）
     IMoveMode playerMove;
 
+    public AudioSource attackSEsource;
+    public AudioClip attackSE;
+
     // Use this for initialization
     void Start()
     {
@@ -26,6 +29,8 @@ public class AttackMode_Yuyuko_01 : MonoBehaviour, IAttackMode
         chargeFrontCount = 0;
         chargeFinishFrame = 0;
         playerMove = transform.parent.GetComponentInChildren<MoveMode_Player_MouseDirection>();
+        attackSEsource = GetComponent<AudioSource>();
+        attackSEsource.clip = attackSE;
     }
 
     public void Attack()
@@ -37,6 +42,7 @@ public class AttackMode_Yuyuko_01 : MonoBehaviour, IAttackMode
             chargeFrontCount += 1;
             if (chargeFrontCount > chargeFront)
             {
+                attackSEsource.Play();
                 for (int i = 0; i < bullentWave; i++)   //进行数波发射
                 {
                     Invoke("Launch", i * waveInterval / 60f);

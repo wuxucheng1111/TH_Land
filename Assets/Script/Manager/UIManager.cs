@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -10,11 +11,13 @@ public class UIManager : SingletonTemplate<UIManager>
     public Text hitCountText;
     public Text scoreText;
     public GameObject buttonGameOver;
+    public GameObject buttonLevelClear;
 
     // Use this for initialization
     void Start()
     {
-        
+        MySceneManager.Instance.GameOverEvent += UIgameOver;
+        MySceneManager.Instance.LevelClearEvent += UIlevelClear;
     }
 
     // Update is called once per frame
@@ -22,8 +25,12 @@ public class UIManager : SingletonTemplate<UIManager>
     {
 
     }
-    public void UIGameOver()
+    public void UIgameOver(object sender,EventArgs e)
     {
         buttonGameOver.SetActive(true);
+    }
+    public void UIlevelClear(object sender, EventArgs e)
+    {
+        buttonLevelClear.SetActive(true);
     }
 }

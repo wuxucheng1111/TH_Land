@@ -14,8 +14,13 @@ public class AttackMode_Bat_AimToPlayer01 : MonoBehaviour, IAttackMode
     public int waveInterval;                //每波间隔
     public int attackStartTime;             //攻击开始时间
     public int chargeBack;                  //攻击后摇
+    public int attackPoint;                 //近战攻击力
+    public float batSize;                   //近战攻击范围
 
     int chargeFinishFrame;                  //蓄力完成帧（下次可攻击的时间点）
+
+    public AudioSource attackSEsource;
+    public AudioClip attackSE;
 
     // Use this for initialization
     void Start()
@@ -30,12 +35,14 @@ public class AttackMode_Bat_AimToPlayer01 : MonoBehaviour, IAttackMode
             Debug.LogWarning("The bullent is null");
         }
         chargeFinishFrame = MySceneManager.Instance.frameSinceLevelLoad + attackStartTime;
+        attackSEsource = GetComponent<AudioSource>();
+        attackSEsource.clip = attackSE;
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        CollisionDet();
     }
 
     public void Attack()
@@ -60,6 +67,23 @@ public class AttackMode_Bat_AimToPlayer01 : MonoBehaviour, IAttackMode
         {
             GameObject bullentIns = (GameObject)Instantiate(bullentType, launchPosition, Quaternion.Euler(0, 0, directionAngle * Mathf.Rad2Deg - bullentRange / 2 + i * bullentRange / (bullentNumber - 1)));
             bullentIns.transform.parent = MySceneManager.Instance.enemyBullentsObj.transform;
+        }
+
+        attackSEsource.Play();
+    }
+
+    void CollisionDet()
+    {
+        for (int i = 0; i < player.Count; i++)
+        {
+            if ((transform.position - player[i].transform.position).magnitude < (player[i].GetComponent<PlayerControl>().playerSize + batSize))
+            {
+                if (player[i].GetComponent<PlayerControl>().isInvincible == false)
+                {
+                    player[i].GetComponent<PlayerControl>().IsHit(attackPoint);
+                    UIManager.Instance.hitCountText.text = "中弹数：" + (++UIManager.Instance.hitCount);
+                }
+            }
         }
     }
 }

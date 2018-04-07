@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
@@ -22,6 +23,9 @@ public class MySceneManager : SingletonTemplate<MySceneManager>
     private int frameZero;
     public int frameSinceLevelLoad { get { return Time.frameCount - frameZero; } }
 
+    public event EventHandler GameOverEvent;
+    public event EventHandler LevelClearEvent;
+
     void Awake()
     {
         Time.timeScale = 1;
@@ -39,11 +43,16 @@ public class MySceneManager : SingletonTemplate<MySceneManager>
     }
     void Update()
     {
-        if (player.Count==0)
+        if (player.Count == 0)
         {
             Invoke("GameOver", 1f);
         }
-        EnemySpawn();        
+        EnemySpawn();
+        if (spawnIndex >= spawnTime.Count && enemies.Count == 0)
+        {
+            Invoke("LevelClear", 1f);
+        }
+
     }
 
     void EnemySpawn()
@@ -70,11 +79,21 @@ public class MySceneManager : SingletonTemplate<MySceneManager>
         return areaBorderY;
     }
     void GameOver()
-    {        
-        UIManager.Instance.UIGameOver();
+    {
+        if (GameOverEvent != null)
+            GameOverEvent(this, EventArgs.Empty);
+    }
+    void LevelClear()
+    {
+        if (LevelClearEvent != null)
+            LevelClearEvent(this, EventArgs.Empty);
     }
     public void Restart()
     {
         SceneManager.LoadScene("Profeb Scene");
+    }
+    public void Quit()
+    {
+        Application.Quit();
     }
 }

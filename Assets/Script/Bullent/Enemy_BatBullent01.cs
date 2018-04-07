@@ -8,7 +8,7 @@ public class Enemy_BatBullent01 : MonoBehaviour
     public float acceleration;          //弹幕加速度
     public float rotationVelocity;      //自转速度
     public int life;                    //弹幕生存时间
-    public float attackPoint;           //弹幕攻击力
+    public int attackPoint;             //弹幕攻击力
     public float bullentSize;           //攻击判定半径
     public bool isTrack;                //是否追尾弹
 
@@ -41,9 +41,16 @@ public class Enemy_BatBullent01 : MonoBehaviour
         {
             if ((transform.position - player[i].transform.position).magnitude < (player[i].GetComponent<PlayerControl>().playerSize + bullentSize))
             {
-                player[i].GetComponent<PlayerControl>().playerHP--;
-                UIManager.Instance.hitCountText.text = "中弹数：" + (++UIManager.Instance.hitCount);
-                Destroy(gameObject);
+                if (player[i].GetComponent<PlayerControl>().isInvincible == false)
+                {
+                    player[i].GetComponent<PlayerControl>().IsHit(attackPoint);
+                    UIManager.Instance.hitCountText.text = "中弹数：" + (++UIManager.Instance.hitCount);
+                    Destroy(gameObject);
+                }
+                else
+                {
+                    Destroy(gameObject);
+                }
             }
         }
     }
