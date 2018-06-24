@@ -13,32 +13,30 @@ public class MoveMode_Player_MouseDirection : MonoBehaviour, IMoveMode
     float directionAngle;
 
     Transform fatherCharactor;  //父物体(含有animator)
+    PlayerModeManager modeManager;
     Camera mCam;			    //主相机
+    float hRatio;               //相机大小与屏幕像素比值的一半
+
     Animator moveAnimator;      //角色animator
     int horizontalHash;         //左右参数
     int verticalHash;           //上下参数
     float moveHorizontal;       //左右按键
     float moveVertical;         //上下按键
     Vector3 moveDirection;      //角色移动方向
-    private float moveBorderX;
-    private float moveBorderY;
+    float moveBorderX;
+    float moveBorderY;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         fatherCharactor = transform.parent;
+        modeManager = fatherCharactor.GetComponent<PlayerControl>().modeManager;
         mCam = Camera.main;
         moveAnimator = fatherCharactor.GetComponent<Animator>();
         horizontalHash = Animator.StringToHash("AxisX");
         verticalHash = Animator.StringToHash("AxisY");
-        moveBorderX = MySceneManager.Instance.GetAreaBorderX() - 0.36f;
-        moveBorderY = MySceneManager.Instance.GetAreaBorderY() - 0.36f;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        moveBorderX = MySceneManager.Instance.GetAreaBorderX() - fatherCharactor.GetComponent<PlayerControl>().playerSize * 2;
+        moveBorderY = MySceneManager.Instance.GetAreaBorderY() - fatherCharactor.GetComponent<PlayerControl>().playerSize * 2;
     }
 
     public void Move()
@@ -90,5 +88,10 @@ public class MoveMode_Player_MouseDirection : MonoBehaviour, IMoveMode
         {
             return directionAngle;
         }
+    }
+
+    public void IsDelayed()
+    {
+        modeManager.SetMoveMode(GetComponent<MoveMode_Player_MouseDirection_Delay>());
     }
 }

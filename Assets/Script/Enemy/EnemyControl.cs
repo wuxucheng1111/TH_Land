@@ -4,15 +4,15 @@ using System.Collections;
 public class EnemyControl : MonoBehaviour
 {
     public int enemyHP;
-    public EnemyState enemyState;
-    public float enemySize { get { return enemyState.GetEnemySize(); } }       //敌人判定半径
+    public EnemyModeManager enemyModeManager;
+    public float enemySize { get { return enemyModeManager.enemySize; } }       //敌人判定半径
     public bool isDead;
 
     Animator enemyAnimator;
     AnimatorStateInfo stateInfo;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         enemyAnimator = GetComponent<Animator>();
     }
@@ -20,21 +20,20 @@ public class EnemyControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (enemyHP <1)
+        if (enemyHP < 1 && isDead==false)
         {
             enemyAnimator.SetBool("isDead", true);
             isDead = true;
-        }
-        else
-        {
-            enemyState.Move();
-            enemyState.Attack();
-        }
-        stateInfo = enemyAnimator.GetCurrentAnimatorStateInfo(0);
-        if (stateInfo.IsTag("Disappear") && stateInfo.normalizedTime >= 1)
-        {
             MySceneManager.Instance.enemies.Remove(gameObject);
-            Destroy(gameObject);
+        }
+        if (isDead)
+        {
+            stateInfo = enemyAnimator.GetCurrentAnimatorStateInfo(0);
+            if (stateInfo.IsTag("Disappear") && stateInfo.normalizedTime >= 1)
+            {
+                GetComponent<ItemDrop>().RandomItemDrop();
+                Destroy(gameObject);
+            }
         }
     }
 }

@@ -12,10 +12,11 @@ public class MySceneManager : SingletonTemplate<MySceneManager>
     public List<int> spawnTime;
     private int spawnIndex = 0;
 
-    public GameObject playerObj;
+    public GameObject playersObj;
     public GameObject enemiesObj;
     public GameObject playerBullentsObj;
     public GameObject enemyBullentsObj;
+    public GameObject itemsObj;
 
     public float areaBorderX;
     public float areaBorderY;
@@ -33,12 +34,11 @@ public class MySceneManager : SingletonTemplate<MySceneManager>
         for (int i = 0; i < player.Count; i++)
         {
             player[i] = Instantiate(player[i]);
-            player[i].transform.parent = playerObj.transform;
+            player[i].transform.parent = playersObj.transform;
         }
     }
     void Start()
     {
-
         frameZero = Time.frameCount;
     }
     void Update()
@@ -52,7 +52,6 @@ public class MySceneManager : SingletonTemplate<MySceneManager>
         {
             Invoke("LevelClear", 1f);
         }
-
     }
 
     void EnemySpawn()

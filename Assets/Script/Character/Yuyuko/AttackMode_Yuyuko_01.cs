@@ -14,13 +14,14 @@ public class AttackMode_Yuyuko_01 : MonoBehaviour, IAttackMode
 
     int chargeFrontCount;                   //前摇计数
     int chargeFinishFrame;                  //蓄力完成帧（下次可攻击的时间点）
+    PlayerModeManager_Yuyuko playerMode;
     IMoveMode playerMove;
 
     public AudioSource attackSEsource;
     public AudioClip attackSE;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         if (bullentType == null)
         {
@@ -28,7 +29,8 @@ public class AttackMode_Yuyuko_01 : MonoBehaviour, IAttackMode
         }
         chargeFrontCount = 0;
         chargeFinishFrame = 0;
-        playerMove = transform.parent.GetComponentInChildren<MoveMode_Player_MouseDirection>();
+        playerMode = transform.parent.GetComponent<PlayerModeManager_Yuyuko>();
+        playerMove = playerMode.playerMoveMode;
         attackSEsource = GetComponent<AudioSource>();
         attackSEsource.clip = attackSE;
     }
@@ -56,14 +58,44 @@ public class AttackMode_Yuyuko_01 : MonoBehaviour, IAttackMode
             chargeFrontCount = 0;
         }
     }
+
+    public void PowerUp(int power)
+    {
+        if ((bullentNumber + power) > 5)
+        {
+            bullentNumber = 5;
+        }
+        else
+        {
+            bullentNumber += power;
+        }
+    }
+
     public void Launch()
     {
         float directionAngle = playerMove.directionAngle;
-        Vector3 LaunchPosition = transform.position + new Vector3(relativeLaunchPosition.x * Mathf.Cos(directionAngle) - relativeLaunchPosition.y * Mathf.Sin(directionAngle), relativeLaunchPosition.x * Mathf.Sin(directionAngle) + relativeLaunchPosition.y * Mathf.Cos(directionAngle), 0); //计算旋转后的偏移位置
-        for (int i = 0; i < bullentNumber; i++)
+        int depth = 0;
+        if (directionAngle < 1.107f && directionAngle > -1.107f)
         {
-            GameObject bullentIns = (GameObject)Instantiate(bullentType, LaunchPosition, Quaternion.Euler(0, 0, playerMove.directionAngle * Mathf.Rad2Deg - bullentRange / 2 + i * bullentRange / (bullentNumber - 1)));
+            depth = 1;
+        }
+        else
+        {
+            depth = -1;
+        }
+        Vector3 LaunchPosition = transform.position + new Vector3(relativeLaunchPosition.x * Mathf.Cos(directionAngle) - relativeLaunchPosition.y * Mathf.Sin(directionAngle), relativeLaunchPosition.x * Mathf.Sin(directionAngle) + relativeLaunchPosition.y * Mathf.Cos(directionAngle), depth); //计算旋转后的偏移位置
+        if (bullentNumber == 1)
+        {
+            GameObject bullentIns = (GameObject)Instantiate(bullentType, LaunchPosition, Quaternion.Euler(0, 0, directionAngle * Mathf.Rad2Deg));
             bullentIns.transform.parent = MySceneManager.Instance.playerBullentsObj.transform;
+        }
+        else
+        {
+            for (int i = 0; i < bullentNumber; i++)
+            {
+                GameObject bullentIns = (GameObject)Instantiate(bullentType, LaunchPosition, Quaternion.Euler(0, 0, directionAngle * Mathf.Rad2Deg - bullentRange / 2 + i * bullentRange / (bullentNumber - 1)));
+                bullentIns.transform.parent = MySceneManager.Instance.playerBullentsObj.transform;
+            }
         }
     }
 }

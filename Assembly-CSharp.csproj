@@ -45,23 +45,35 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Script\Abstract\AMoveMode.cs" />
      <Compile Include="Assets\Script\Bullent\Enemy_BatBullent01.cs" />
      <Compile Include="Assets\Script\Bullent\Player_YuyukoBullent01.cs" />
+     <Compile Include="Assets\Script\Bullent\Player_YuyukoBullent02.cs" />
      <Compile Include="Assets\Script\Camera\CameraFollow.cs" />
+     <Compile Include="Assets\Script\Character\MoveMode_Player_DirectionFixed.cs" />
      <Compile Include="Assets\Script\Character\MoveMode_Player_MouseDirection.cs" />
+     <Compile Include="Assets\Script\Character\MoveMode_Player_MouseDirection_Delay.cs" />
      <Compile Include="Assets\Script\Character\PlayerControl.cs" />
      <Compile Include="Assets\Script\Character\Yuyuko\AttackMode_Yuyuko_01.cs" />
-     <Compile Include="Assets\Script\Character\Yuyuko\Player_Yuyuko_NormalState.cs" />
-     <Compile Include="Assets\Script\Enemy\Bat\AttackMode_Bat_AimToPlayer01.cs" />
-     <Compile Include="Assets\Script\Enemy\Bat\Enemy_Bat_NormalState.cs" />
-     <Compile Include="Assets\Script\Enemy\Bat\MoveMode_Bat_Random01.cs" />
+     <Compile Include="Assets\Script\Character\Yuyuko\AttackMode_Yuyuko_02.cs" />
+     <Compile Include="Assets\Script\Character\Yuyuko\HitMod_Yuyuko_01.cs" />
+     <Compile Include="Assets\Script\Character\Yuyuko\PlayerModeManager_Yuyuko.cs" />
+     <Compile Include="Assets\Script\Effect\Yuyuko_Effect01.cs" />
+     <Compile Include="Assets\Script\Effect\Yuyuko_Effect02.cs" />
+     <Compile Include="Assets\Script\Enemy\Bat\AttackMode_Bat02_AimToPlayer01.cs" />
+     <Compile Include="Assets\Script\Enemy\Bat\EnemyModeManager_Bat02.cs" />
+     <Compile Include="Assets\Script\Enemy\Bat\HitMode_Bat02_01.cs" />
+     <Compile Include="Assets\Script\Enemy\Bat\MoveMode_Bat02_Random01.cs" />
      <Compile Include="Assets\Script\Enemy\EnemyControl.cs" />
-     <Compile Include="Assets\Script\Interface\EnemyState.cs" />
+     <Compile Include="Assets\Script\Enemy\ItemDrop.cs" />
+     <Compile Include="Assets\Script\Interface\EnemyModeManager.cs" />
      <Compile Include="Assets\Script\Interface\IAttackMode.cs" />
      <Compile Include="Assets\Script\Interface\IEnemyState.cs" />
+     <Compile Include="Assets\Script\Interface\IHitMode.cs" />
      <Compile Include="Assets\Script\Interface\IMoveMode.cs" />
-     <Compile Include="Assets\Script\Interface\IPlayerState.cs" />
-     <Compile Include="Assets\Script\Interface\PlayerState.cs" />
+     <Compile Include="Assets\Script\Interface\PlayerModeManager.cs" />
+     <Compile Include="Assets\Script\Item\Item_HPUp.cs" />
+     <Compile Include="Assets\Script\Item\Item_PowerUp.cs" />
      <Compile Include="Assets\Script\Manager\MySceneManager.cs" />
      <Compile Include="Assets\Script\Manager\SingletonTemplate.cs" />
      <Compile Include="Assets\Script\Manager\UIManager.cs" />
