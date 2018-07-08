@@ -4,7 +4,7 @@ using System.Collections;
 public class EnemyControl : MonoBehaviour
 {
     public int enemyHP;
-    public EnemyModeManager enemyModeManager;
+    public AEnemyModeManager enemyModeManager;
     public float enemySize { get { return enemyModeManager.enemySize; } }       //敌人判定半径
     public bool isDead;
 

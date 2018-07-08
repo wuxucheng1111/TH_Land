@@ -1,19 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MoveMode_Player_MouseDirection_Delay : MonoBehaviour, IMoveMode
+public class MoveMode_Player_MouseDirection_Delay : AMoveMode
 {    
-    /// <summary>
-    /// 角色移动速度
-    /// </summary>
-    public float moveSpeed;
-    /// <summary>
-    /// 鼠标到角色连线与y轴的夹角
-    /// </summary>
-    float directionAngle;
-
-    Transform fatherCharactor;  //父物体(含有animator)
-    PlayerModeManager modeManager;
+    public Transform playerTransform;  //父物体(含有animator)
+    APlayerModeManager modeManager;
     Camera mCam;			    //主相机
     Animator moveAnimator;      //角色animator
     int horizontalHash;         //左右参数
@@ -25,25 +16,26 @@ public class MoveMode_Player_MouseDirection_Delay : MonoBehaviour, IMoveMode
     float moveBorderY;
 
     public int delayFrame;
+    public AMoveMode moveModeNormal;
     private int modeStartFrame;
 
     // Use this for initialization
     void Awake()
     {
-        fatherCharactor = transform.parent;
-        modeManager = fatherCharactor.GetComponent<PlayerControl>().modeManager;
+        playerTransform = transform.parent.parent;
+        modeManager = playerTransform.GetComponent<PlayerControl>().modeManager;
         mCam = Camera.main;
-        moveAnimator = fatherCharactor.GetComponent<Animator>();
+        moveAnimator = playerTransform.GetComponent<Animator>();
         horizontalHash = Animator.StringToHash("AxisX");
         verticalHash = Animator.StringToHash("AxisY");
-        moveBorderX = MySceneManager.Instance.GetAreaBorderX() - fatherCharactor.GetComponent<PlayerControl>().playerSize * 2;
-        moveBorderY = MySceneManager.Instance.GetAreaBorderY() - fatherCharactor.GetComponent<PlayerControl>().playerSize * 2;
+        moveBorderX = MySceneManager.Instance.GetAreaBorderX() - playerTransform.GetComponent<PlayerControl>().playerSize * 2;
+        moveBorderY = MySceneManager.Instance.GetAreaBorderY() - playerTransform.GetComponent<PlayerControl>().playerSize * 2;
         modeStartFrame = 0;
     }
 
-    public void Move()
+    public override void Move()
     {
-        if (fatherCharactor.GetComponent<PlayerControl>().isDead)
+        if (playerTransform.GetComponent<PlayerControl>().isDead)
         {
             moveAnimator.speed = 1;
         }
@@ -71,16 +63,16 @@ public class MoveMode_Player_MouseDirection_Delay : MonoBehaviour, IMoveMode
             }
 
             //角色移动
-            if ((fatherCharactor.transform.position.x > moveBorderX && moveHorizontal == 1) || (fatherCharactor.transform.position.x < -moveBorderX && moveHorizontal == -1))
+            if ((playerTransform.transform.position.x > moveBorderX && moveHorizontal == 1) || (playerTransform.transform.position.x < -moveBorderX && moveHorizontal == -1))
             {
                 moveHorizontal = 0;
             }
-            if ((fatherCharactor.transform.position.y > moveBorderY && moveVertical == 1) || (fatherCharactor.transform.position.y < -moveBorderY && moveVertical == -1))
+            if ((playerTransform.transform.position.y > moveBorderY && moveVertical == 1) || (playerTransform.transform.position.y < -moveBorderY && moveVertical == -1))
             {
                 moveVertical = 0;
             }
             moveDirection = new Vector3(moveHorizontal, moveVertical).normalized;
-            fatherCharactor.transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
+            playerTransform.transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
         }
 
         if (modeStartFrame == 0)
@@ -89,21 +81,12 @@ public class MoveMode_Player_MouseDirection_Delay : MonoBehaviour, IMoveMode
         }
         else if ((MySceneManager.Instance.frameSinceLevelLoad - modeStartFrame) > delayFrame)
         {
-            modeManager.SetMoveMode(GetComponent<MoveMode_Player_MouseDirection>());
+            modeManager.SetMoveMode(moveModeNormal);
             modeStartFrame = 0;
         }
     }
 
-    float IMoveMode.directionAngle
-    {
-        get
-        {
-            return directionAngle;
-        }
-    }
-
-
-    public void IsDelayed()
+    public override void IsDelayed()
     {
         modeStartFrame = MySceneManager.Instance.frameSinceLevelLoad;
     }

@@ -3,7 +3,15 @@ using System.Collections;
 
 public abstract class AMoveMode : MonoBehaviour
 {
-    //float directionangle { get; }
-    //public void move();
-    //public void isdelayed();
+    /// <summary>
+    /// 角色移动速度
+    /// </summary>
+    public float moveSpeed;
+    [HideInInspector]
+    /// <summary>
+    /// 鼠标到角色连线与y轴的夹角
+    /// </summary>
+    public float directionAngle;
+    public abstract void Move();
+    public abstract void IsDelayed();
 }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerControl : MonoBehaviour
 {
-    public PlayerModeManager modeManager;
+    public APlayerModeManager modeManager;
     public float playerSize { get { return modeManager.playerSize; } }     //角色判定半径
     public int maxPlayHP;
     public int playerHP;

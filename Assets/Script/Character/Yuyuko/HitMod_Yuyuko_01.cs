@@ -1,26 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HitMod_Yuyuko_01 : MonoBehaviour, IHitMode
+public class HitMod_Yuyuko_01 : AHitMode
 {
     private PlayerControl playerControl;
+    [HideInInspector]
     public bool isInvincible;
     public int invincibleTime;
     private int vincibleTime;
     public AudioClip beHitSE;
     private SpriteRenderer playerSprite;
-    private PlayerModeManager modeManager;
+    private APlayerModeManager modeManager;
+    public Transform playerTransform;
 
     // Use this for initialization
     void Awake()
     {
-        playerControl = transform.parent.GetComponent<PlayerControl>();
-        playerSprite = transform.parent.GetComponent<SpriteRenderer>();
+        playerControl = playerTransform.GetComponent<PlayerControl>();
+        playerSprite = playerTransform.GetComponent<SpriteRenderer>();
         modeManager = playerControl.modeManager;
         isInvincible = false;
     }
 
-    public void IsHit(int atkPoint, int effect)
+    public override void IsHit(int atkPoint, int effect)
     {
         if (isInvincible == false)
         {
@@ -40,7 +42,7 @@ public class HitMod_Yuyuko_01 : MonoBehaviour, IHitMode
         }
     }
 
-    public void Hit()
+    public override void Hit()
     {
         if (isInvincible)
         {

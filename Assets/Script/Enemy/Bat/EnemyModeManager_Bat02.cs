@@ -1,13 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyModeManager_Bat02 : EnemyModeManager
+public class EnemyModeManager_Bat02 : AEnemyModeManager
 {
     // Use this for initialization
     void Awake()
     {
-        enemyMoveMode = GetComponentInChildren<MoveMode_Bat02_Random01>();
-        enemyAttackMode = GetComponentInChildren<AttackMode_Bat02_AimToPlayer01>();
         enemyHitMode = GetComponentInChildren<HitMode_Bat02_01>();
     }
 
@@ -20,17 +18,17 @@ public class EnemyModeManager_Bat02 : EnemyModeManager
     }
 
 
-    public override void SetMoveMode(IMoveMode moveMode)
+    public override void SetMoveMode(AMoveMode moveMode)
     {
         enemyMoveMode = moveMode;
     }
 
-    public override void SetAttackMode(IAttackMode attackMode)
+    public override void SetAttackMode(AAttackMode attackMode)
     {
         enemyAttackMode = attackMode;
     }
 
-    public override void SetHitMode(IHitMode hitMode)
+    public override void SetHitMode(AHitMode hitMode)
     {
         enemyHitMode = hitMode;
     }

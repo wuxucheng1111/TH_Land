@@ -1,16 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerModeManager_Yuyuko : PlayerModeManager
-{    
-    // Use this for initialization
-    void Awake()
-    {
-        playerMoveMode = GetComponentInChildren<MoveMode_Player_MouseDirection>();
-        playerAttackMode = GetComponentInChildren<AttackMode_Yuyuko_02>();
-        playerHitMode = GetComponentInChildren<HitMod_Yuyuko_01>();
-    }
-
+public class PlayerModeManager_Yuyuko : APlayerModeManager
+{
     // Update is called once per frame
     void Update()
     {
@@ -19,12 +11,12 @@ public class PlayerModeManager_Yuyuko : PlayerModeManager
         playerHitMode.Hit();
     }
 
-    public override void SetMoveMode(IMoveMode moveMode)
+    public override void SetMoveMode(AMoveMode moveMode)
     {
         playerMoveMode = moveMode;
     }
 
-    public override void SetAttackMode(IAttackMode attackMode)
+    public override void SetAttackMode(AAttackMode attackMode)
     {
         playerAttackMode = attackMode;
     }
@@ -34,7 +26,7 @@ public class PlayerModeManager_Yuyuko : PlayerModeManager
         playerSize = size;
     }
 
-    public override void SetHitMode(IHitMode hitMode)
+    public override void SetHitMode(AHitMode hitMode)
     {
         playerHitMode = hitMode;
     }

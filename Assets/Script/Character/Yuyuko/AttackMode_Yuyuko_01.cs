@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AttackMode_Yuyuko_01 : MonoBehaviour, IAttackMode
+public class AttackMode_Yuyuko_01 : AAttackMode
 {
     public GameObject bullentType;          //发射的子弹预设体
     public Vector3 relativeLaunchPosition;  //发射相对位置
@@ -15,7 +15,8 @@ public class AttackMode_Yuyuko_01 : MonoBehaviour, IAttackMode
     int chargeFrontCount;                   //前摇计数
     int chargeFinishFrame;                  //蓄力完成帧（下次可攻击的时间点）
     PlayerModeManager_Yuyuko playerMode;
-    IMoveMode playerMove;
+    AMoveMode playerMove;
+    public Transform playerTransform;
 
     public AudioSource attackSEsource;
     public AudioClip attackSE;
@@ -29,15 +30,14 @@ public class AttackMode_Yuyuko_01 : MonoBehaviour, IAttackMode
         }
         chargeFrontCount = 0;
         chargeFinishFrame = 0;
-        playerMode = transform.parent.GetComponent<PlayerModeManager_Yuyuko>();
+        playerMode = playerTransform.GetComponent<PlayerModeManager_Yuyuko>();
         playerMove = playerMode.playerMoveMode;
-        attackSEsource = GetComponent<AudioSource>();
         attackSEsource.clip = attackSE;
     }
 
-    public void Attack()
+    public override void Attack()
     {
-        if (transform.parent.GetComponent<PlayerControl>().isDead)
+        if (playerTransform.GetComponent<PlayerControl>().isDead)
             return;
         if (Input.GetButton("Fire1") && (MySceneManager.Instance.frameSinceLevelLoad > chargeFinishFrame))    //按下攻击键且没有处于后摇中
         {
@@ -59,7 +59,7 @@ public class AttackMode_Yuyuko_01 : MonoBehaviour, IAttackMode
         }
     }
 
-    public void PowerUp(int power)
+    public override void PowerUp(int power)
     {
         if ((bullentNumber + power) > 5)
         {

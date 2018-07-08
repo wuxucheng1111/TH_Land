@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class AttackMode_Bat02_AimToPlayer01 : MonoBehaviour, IAttackMode
+public class AttackMode_Bat02_AimToPlayer01 : AAttackMode
 {
     public GameObject bullentType;          //弹幕预制体
     public List<GameObject> player;         //玩家列表
@@ -36,11 +36,10 @@ public class AttackMode_Bat02_AimToPlayer01 : MonoBehaviour, IAttackMode
             Debug.LogWarning("The bullent is null");
         }
         chargeFinishFrame = MySceneManager.Instance.frameSinceLevelLoad + attackStartTime;
-        attackSESource = GetComponent<AudioSource>();
         attackSESource.clip = attackSE;
     }
 
-    public void Attack()
+    public override void Attack()
     {
         if (MySceneManager.Instance.frameSinceLevelLoad > chargeFinishFrame)
         {
@@ -53,7 +52,7 @@ public class AttackMode_Bat02_AimToPlayer01 : MonoBehaviour, IAttackMode
         CollisionDet();
     }
 
-    public void PowerUp(int power)
+    public override void PowerUp(int power)
     {
         throw new System.NotImplementedException();
     }
@@ -64,12 +63,19 @@ public class AttackMode_Bat02_AimToPlayer01 : MonoBehaviour, IAttackMode
             return;
         float directionAngle = Mathf.Atan2(aimedPlayer.transform.position.y - transform.position.y, aimedPlayer.transform.position.x - transform.position.x) - Mathf.PI / 2;  //与玩家的连线与Y轴的夹角
         Vector3 launchPosition = transform.position + new Vector3(relativeLaunchPosition.x * Mathf.Cos(directionAngle) - relativeLaunchPosition.y * Mathf.Sin(directionAngle), relativeLaunchPosition.x * Mathf.Sin(directionAngle) + relativeLaunchPosition.y * Mathf.Cos(directionAngle), 0); //计算旋转后的偏移位置
-        for (int i = 0; i < bullentNumber; i++)
+        if (bullentNumber == 1)
         {
-            GameObject bullentIns = (GameObject)Instantiate(bullentType, launchPosition, Quaternion.Euler(0, 0, directionAngle * Mathf.Rad2Deg - bullentRange / 2 + i * bullentRange / (bullentNumber - 1)));
+            GameObject bullentIns = (GameObject)Instantiate(bullentType, launchPosition, Quaternion.Euler(0, 0, directionAngle * Mathf.Rad2Deg));
             bullentIns.transform.parent = MySceneManager.Instance.enemyBullentsObj.transform;
         }
-
+        else
+        {
+            for (int i = 0; i < bullentNumber; i++)
+            {
+                GameObject bullentIns = (GameObject)Instantiate(bullentType, launchPosition, Quaternion.Euler(0, 0, directionAngle * Mathf.Rad2Deg - bullentRange / 2 + i * bullentRange / (bullentNumber - 1)));
+                bullentIns.transform.parent = MySceneManager.Instance.enemyBullentsObj.transform;
+            }
+        }
         attackSESource.Play();
     }
 
